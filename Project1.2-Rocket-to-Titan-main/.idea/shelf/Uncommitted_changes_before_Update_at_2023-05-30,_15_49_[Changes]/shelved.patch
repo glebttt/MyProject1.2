@@ -1,0 +1,38 @@
+Index: src/main/java/code/algorithms/ModelRunner.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package code.algorithms;\n\nimport code.model.objects.PlanetObject;\nimport code.model.objects.Probe;\nimport code.utils.HelperFunctions;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class ModelRunner {\n\n    private ModelRunner() {\n    }\n\n    public static double runnerForGUI(double time, int smoothness, double accuracy, List<PlanetObject> planetss, List<Probe> probes) {\n        ArrayList<PlanetObject> allObjects = new ArrayList<>(planetss);\n        allObjects.addAll(probes);\n        PlanetObject[] planets = allObjects.toArray(new PlanetObject[allObjects.size()]);\n        boolean stopper = false;\n        // check if the boosts\n        for (Probe probe : probes) {\n            boolean checker = probe.areBoostsValid(accuracy);\n            if (!checker) {\n                stopper = true;\n                System.out.println(\"The probe \" + probe.getProbeNumber() + \" with wrong boost\");\n            }\n        }\n\n\n        if (!stopper) {\n            for (int i = 0; i < smoothness; i += 1) {\n\n                for (int j = 1; j < planets.length; j++) {\n                    if (i % ((1 / accuracy) * 60 * 60 * 24) == 0) {\n\n                        double day = time / ((1 / accuracy) * 60 * 60 * 24);\n                        for (Probe probe : probes) {\n                            probe.BoosterMECH(day);\n                        }\n                    }\n                    double[] acc = new double[3];\n                    for (int k = 0; k < planets.length; k++) {\n                        if (k != j) {\n                            acc = HelperFunctions.addition(acc, planets[j].accelerationBetween(planets[k]));\n                        }\n                    }\n                    Solvers.implicitEuler(planets[j], acc, accuracy);\n                }\n                time++;\n            }\n        }\n        return time;\n    }\n\n\n    public static void runnerForModel(int numberOfDays, double accuracy, PlanetObject[] planets) {\n        for (int i = 0; i < (1 / accuracy) * 60 * 60 * 24 * numberOfDays; i += 1) {\n            if (i % ((1 / accuracy) * 60 * 60 * 24) == 0) {\n                System.out.println(i / ((1 / accuracy) * 60 * 60 * 24));\n            }\n            for (int j = 1; j < planets.length; j++) {\n                planets[j].initializeAcceleration();\n                for (int k = 0; k < planets.length; k++) {\n                    if (k != j) {\n                        Solvers.explicitEuler(planets[j], planets[k], accuracy);\n                    }\n                }\n            }\n        }\n    }\n\n    public static void runnerForMultipleProbes(int numberOfDays, double accuracy, List<PlanetObject> planetss, List<Probe> probes) {\n        ArrayList<PlanetObject> allObjects = new ArrayList<>(planetss);\n        allObjects.addAll(probes);\n        PlanetObject[] planets = allObjects.toArray(new PlanetObject[allObjects.size()]);\n        boolean stopper = false;\n        // check if the boosts\n        for (Probe probe : probes) {\n            boolean checker = probe.areBoostsValid(accuracy);\n            System.out.println(checker);\n            if (!checker) {\n                stopper = true;\n                System.out.println(\"The probe \" + probe.getProbeNumber() + \" with wrong boost\");\n            }\n        }\n\n\n        if (!stopper) {\n            for (int i = 0; i < (1 / accuracy) * 60 * 60 * 24 * numberOfDays; i += 1) {\n\n                if (i % ((1 / accuracy) * 60 * 60 * 24) == 0) {\n                    double day = i / ((1 / accuracy) * 60 * 60 * 24);\n                    System.out.println(\"Day \" + day);\n                    for (Probe probe : probes) {\n                        probe.BoosterMECH(day);\n                    }\n                }\n                for (int j = 1; j < planets.length; j++) {\n\n                    double[] acc = new double[3];\n                    for (int k = 0; k < planets.length - probes.size(); k++) {\n\n                        if (k != j) {\n                            acc = HelperFunctions.addition(acc, planets[j].accelerationBetween(planets[k]));\n                        }\n                    }\n                    Solvers.implicitEuler(planets[j], acc, accuracy);\n                }\n            }\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/code/algorithms/ModelRunner.java b/src/main/java/code/algorithms/ModelRunner.java
+--- a/src/main/java/code/algorithms/ModelRunner.java	
++++ b/src/main/java/code/algorithms/ModelRunner.java	
+@@ -8,10 +8,10 @@
+ import java.util.List;
+ 
+ public class ModelRunner {
+-
+     private ModelRunner() {
+     }
+ 
++
+     public static double runnerForGUI(double time, int smoothness, double accuracy, List<PlanetObject> planetss, List<Probe> probes) {
+         ArrayList<PlanetObject> allObjects = new ArrayList<>(planetss);
+         allObjects.addAll(probes);
+@@ -26,7 +26,6 @@
+             }
+         }
+ 
+-
+         if (!stopper) {
+             for (int i = 0; i < smoothness; i += 1) {
+ 
+@@ -84,7 +83,6 @@
+             }
+         }
+ 
+-
+         if (!stopper) {
+             for (int i = 0; i < (1 / accuracy) * 60 * 60 * 24 * numberOfDays; i += 1) {
+ 

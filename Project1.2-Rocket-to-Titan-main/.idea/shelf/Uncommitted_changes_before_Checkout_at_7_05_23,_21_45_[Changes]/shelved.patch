@@ -1,0 +1,17 @@
+Index: src/main/java/Model/Boost.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package Model;\n\npublic class Boost\n{\n    private double timeOfBoost;\n    private double[] boostAmount;\n\n    public Boost(double timeOfBoost, double[] boostAmount)\n    {\n        this.timeOfBoost = timeOfBoost;\n        this.boostAmount = boostAmount;\n    }\n\n    public double getTimeOfBoost()\n    {\n        return timeOfBoost;\n    }\n\n    public void setTimeOfBoost(double timeOfBoost)\n    {\n        this.timeOfBoost = timeOfBoost;\n    }\n\n    public double[] getBoostAmount()\n    {\n        return boostAmount;\n    }\n\n    public void setBoostAmount(double[] boostAmount)\n    {\n        this.boostAmount = boostAmount;\n    }\n}\n
+===================================================================
+diff --git a/src/main/java/Model/Boost.java b/src/main/java/Model/Boost.java
+--- a/src/main/java/Model/Boost.java	
++++ b/src/main/java/Model/Boost.java	
+@@ -5,6 +5,8 @@
+     private double timeOfBoost;
+     private double[] boostAmount;
+ 
++    private  double fuel;
++
+     public Boost(double timeOfBoost, double[] boostAmount)
+     {
+         this.timeOfBoost = timeOfBoost;

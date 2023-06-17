@@ -1,0 +1,17 @@
+Index: src/main/java/code/graphics/visuals/SolarSubScene.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package code.graphics.visuals;\n\nimport code.graphics.visuals.controllers.SolarKeyController;\nimport code.model.Model;\nimport javafx.scene.Group;\nimport javafx.scene.SceneAntialiasing;\nimport javafx.scene.SubScene;\nimport javafx.scene.paint.Color;\n\n/**\n * Class responsible for creating and managing the movement of the 3D objects in the visualization.\n */\npublic class SolarSubScene extends SubScene {\n    private final SolarGroup SOLAR_GROUP;\n    private final SolarCamera CAMERA;\n\n\n    public SolarSubScene(Group root, double width, double height) {\n        super(root, width, height, true, SceneAntialiasing.BALANCED);\n\n        SOLAR_GROUP = new SolarGroup(Model.getPlanetObjects(), Model.getProbes());\n        CAMERA = new SolarCamera();\n        root.getChildren().add(SOLAR_GROUP);\n\n        root.setTranslateX(width / 2);\n        root.setTranslateY(height / 2);\n\n        initializeSubScene();\n    }\n\n\n    private void initializeSubScene() {\n        setFill(Color.BLACK.brighter());\n        setCamera(CAMERA);\n        new SolarKeyController(this);\n        setCurrentFocus(\"Probe\");\n        rescaleObjects();\n    }\n\n    /**\n     * Updates the positions of all 3D objects representations.\n     */\n    public void updateObjects() {\n        SOLAR_GROUP.updateGroup();\n    }\n\n    public void rescaleObjects() {\n        double zoomThreshold = -100;\n        double maxZoom = -4_000_000_00d;\n        double currentZoom = CAMERA.getTranslateZ();\n\n        if (currentZoom > zoomThreshold) {\n            SOLAR_GROUP.resizeObjects(0);\n            return;\n        }\n\n        double zoomRatio = (currentZoom - zoomThreshold) / (maxZoom - zoomThreshold);\n        zoomRatio = Math.max(0, Math.min(zoomRatio, 1));\n\n        SOLAR_GROUP.resizeObjects(zoomRatio);\n    }\n\n    public void setCurrentFocus(String planetName) {\n        SOLAR_GROUP.setCurrentFocus(planetName);\n        CAMERA.setMinZoom(-SOLAR_GROUP.getPlanetSphereByName(planetName).getMinRadius());\n    }\n\n    public void addTrail(){\n        SOLAR_GROUP.addTrail();\n    }\n}\n
+===================================================================
+diff --git a/src/main/java/code/graphics/visuals/SolarSubScene.java b/src/main/java/code/graphics/visuals/SolarSubScene.java
+--- a/src/main/java/code/graphics/visuals/SolarSubScene.java	
++++ b/src/main/java/code/graphics/visuals/SolarSubScene.java	
+@@ -40,7 +40,7 @@
+     /**
+      * Updates the positions of all 3D objects representations.
+      */
+-    public void updateObjects() {
++    public void update() {
+         SOLAR_GROUP.updateGroup();
+     }
+ 

@@ -1,0 +1,39 @@
+Index: src/main/java/code/NasaRunner.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package code;\n\n\nimport code.algorithms.ModelRunner;\nimport code.model.Model;\nimport code.model.data.loaders.FileDataLoader;\nimport code.model.data.loaders.NasaDataLoader;\nimport code.model.objects.Probe;\nimport code.utils.HelperFunctions;\n\nimport java.util.Arrays;\n\npublic class NasaRunner\n{\n    public static void main(String[] args)\n    {\n\n        Model.getInstance().loadData(new FileDataLoader());\n        Probe probe= new Probe();\n        Probe.Boost boost=new Probe.Boost(0,new double[]{68.7449, -44.1, -2.2176});\n        probe.addBoost(boost);\n        Model.addProbe(probe);\n\n        ModelRunner.runnerForFastEuler(365,2,Model.getPlanetObjectsArray());\n//        double[] target=Model.getPlanetObjectsArray()[3].getTargetPosition();\n//        double[] model=Model.getPlanetObjectsArray()[3].getCoordinates();\n//        System.out.println(Arrays.toString(model));\n        System.out.println(probe.getShortestDistanceToTitan());\n//        System.out.println(HelperFunctions.getDistanceBetweenWithVectors(model,target));\n        //7.492931555658273E8\n    }\n}\n
+===================================================================
+diff --git a/src/main/java/code/NasaRunner.java b/src/main/java/code/NasaRunner.java
+--- a/src/main/java/code/NasaRunner.java	
++++ b/src/main/java/code/NasaRunner.java	
+@@ -4,24 +4,18 @@
+ import code.algorithms.ModelRunner;
+ import code.model.Model;
+ import code.model.data.loaders.FileDataLoader;
+-import code.model.data.loaders.NasaDataLoader;
++import code.model.objects.Boost;
+ import code.model.objects.Probe;
+-import code.utils.HelperFunctions;
+-
+-import java.util.Arrays;
+ 
+-public class NasaRunner
+-{
+-    public static void main(String[] args)
+-    {
+-
++public class NasaRunner {
++    public static void main(String[] args) {
+         Model.getInstance().loadData(new FileDataLoader());
+-        Probe probe= new Probe();
+-        Probe.Boost boost=new Probe.Boost(0,new double[]{68.7449, -44.1, -2.2176});
++        Probe probe = new Probe();
++        Boost boost = new Boost(0, new double[]{68.7449, -44.1, -2.2176});
+         probe.addBoost(boost);
+         Model.addProbe(probe);
+ 
+-        ModelRunner.runnerForFastEuler(365,2,Model.getPlanetObjectsArray());
++        ModelRunner.runnerForFastEuler(365, 2, Model.getPlanetObjectsArray());
+ //        double[] target=Model.getPlanetObjectsArray()[3].getTargetPosition();
+ //        double[] model=Model.getPlanetObjectsArray()[3].getCoordinates();
+ //        System.out.println(Arrays.toString(model));
