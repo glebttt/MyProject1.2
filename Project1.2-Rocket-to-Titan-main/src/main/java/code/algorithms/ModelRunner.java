@@ -81,6 +81,7 @@ public class ModelRunner {
         AccelerationFunction accelerationFunction;
         VelocityFunction velocityFunction;
         Solvers solvers = new Solvers();
+        int counter = 0;
         ArrayList<PlanetObject> allObjects = new ArrayList<>(planetsList);
         allObjects.addAll(probes);
         PlanetObject[] planets = allObjects.toArray(new PlanetObject[allObjects.size()]);
@@ -98,6 +99,7 @@ public class ModelRunner {
             for (int i = 0; i < smoothness; i += 1) {
 
                 for (int j = 1; j < planets.length; j++) {
+                    planets[j].initAcceleration(new double[]{0,0,0});
                     if (i % ((1 / accuracy) * 60 * 60 * 24) == 0) {
 
                         double day = time / ((1 / accuracy) * 60 * 60 * 24);
@@ -106,32 +108,40 @@ public class ModelRunner {
                         }
                     }
                     double[] acc = new double[3];
+                    //here I just initialize the place-holders for the new values
+                    double[] newPosition = new double[3];
+                    double[] newVelocity = new double[3];
+                    double[] newAcceleration = new double[3];
                     for (int k = 0; k < planets.length; k++) {
-                        double[] newPosition = new double[3];
-                        double[] newVelocity = new double[3];
-                        for (int l = 0; l<3; l++){
+
+                        for (int l = 0; l<3; l++){ //this loop makes sure we go through every vector index ie x,y,z
                         if (k != j) {
+                                System.out.println("velocity "+planets[j].getVelocity()[l]);
+                                System.out.println("position "+planets[j].getCoordinates()[l]);
+                                System.out.println("acceleration "+planets[j].getAcceleration()[l]);
                             //acc = HelperFunctions.addition(acc, planets[j].accelerationBetween(planets[k]));
-                            double[] position = planets[j].getCoordinates();
-                            double[] otherPosition = planets[k].getCoordinates();
-                            double otherPosition1D = planets[k].getCoordinates()[l];
-                            accelerationFunction = new AccelerationFunction(planets[j], planets[k], otherPosition1D, l);
+                            double otherPosition1D = planets[k].getCoordinates()[l]; //gets a single coordinate for other object
+                            accelerationFunction = new AccelerationFunction(planets[j], planets[k], otherPosition1D);
                             velocityFunction = new VelocityFunction(planets[j].getVelocity()[l]);
-                            Vector y = new Vector();
+                            Vector y = new Vector(); //initializing a new state vector (the one where we store our two functions)
+                            //we add our two functions into the state vector
                             y.addFunction(accelerationFunction);
-                            //y.addFunction(velocityFunction);
+                            y.addFunction(velocityFunction);
                             double initVelocity = planets[j].getVelocity()[l];
                             double initPosition = planets[j].getCoordinates()[l];
-                            //System.out.println("initPosition: "+initPosition+" initVelocity: "+initVelocity);
-                            double[] y0 = {initPosition, initVelocity};
-                            solvers.eulerStep(y, y0, 0.5, 0);
-                            newPosition[l] = planets[j].getVelocity()[l];
-                            //newPosition[l] = solvers.getW(1);
-                            newVelocity[l] = solvers.getW(0);
+                            double[] y0 = {initPosition, initVelocity}; //I initialize the starting values for the euler solver (look two lines above)
+                            solvers.eulerStep(y, y0, 0.5, 0);  //and then I input everything into the euler solver (t = 0 is not relevant as I said)
+                            //newPosition[l] = planets[j].getVelocity()[l];
+                            newPosition[l] = solvers.getW(1); //refer to the very top of Solvers class
+                            newVelocity[l] = solvers.getW(0); //same
+                            newAcceleration[l] = accelerationFunction.accelerationForEuler(l); //refer to bottom of AccelerationFunction class
+                            counter++;
                         }
+                        }
+                        //just updating the instance fields of planet object
                         planets[j].setVelocity(newVelocity);
                         planets[j].setCoordinates(newPosition);
-                        }
+                        planets[j].setAcceleration(newAcceleration);
                     }
                     //Solvers.implicitEuler(planets[j], acc, accuracy);
                 }

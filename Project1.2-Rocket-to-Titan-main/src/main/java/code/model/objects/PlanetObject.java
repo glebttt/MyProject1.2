@@ -85,6 +85,10 @@ public class PlanetObject {
         COORDINATES[2] = coordinates[2];
     }
 
+    public void initAcceleration(double[] acceleration){
+        if (this.acceleration == null) this.acceleration = acceleration;
+    }
+
     /**
      * Retrieves the velocity of the modeled object.
      *

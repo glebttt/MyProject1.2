@@ -84,14 +84,14 @@ public class Visualizer extends Application {
                         if (Model.getProbes().get(0).getDistanceToTitan() > Model.getProbes().get(0).getShortestDistanceToTitan()) {
                             Model.getProbes().get(0).setVelocity(new double[]{-128.99164151418873, 46.449291805183115, 3.3594162321263057});
                         }
-                        for (int i = 0; i < 10; i++) {
+                        //for (int i = 0; i < 1; i++) {
                             double day = time / (60 * 60 * 24);
                             time = ModelRunner.runnerForGUI(time, 180, 4, Model.getPlanetObjectsArrayList(), Model.getProbes());
                             Platform.runLater(() -> {
                                 solarSubScene.update();
                                 overlayPane.update(day);
                             });
-                        }
+                       //}
 
                         count++;
                         if (count % 25 == 0)

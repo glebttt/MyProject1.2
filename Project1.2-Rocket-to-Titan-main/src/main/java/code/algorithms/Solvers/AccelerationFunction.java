@@ -10,16 +10,15 @@ public class AccelerationFunction implements Function {
     PlanetObject otherObject;
 
     private double acceleration;
-    int i;
 
     double distance;
 
     double otherPosition1D;
 
-    public AccelerationFunction(PlanetObject planetObject, PlanetObject otherObject, double otherPosition1D, int i){
+    public AccelerationFunction(PlanetObject planetObject, PlanetObject otherObject, double otherPosition1D){
         this.planetObject = planetObject;
         this.otherObject = otherObject;
-        this.distance = 1 / HelperFunctions.getDistanceBetweenWithVectors(planetObject.getCoordinates(), otherObject.getCoordinates());
+        this.distance = 1/HelperFunctions.getDistanceBetweenWithVectors(planetObject.getCoordinates(), otherObject.getCoordinates());
         this.otherPosition1D = otherPosition1D;
     }
 
@@ -29,13 +28,15 @@ public class AccelerationFunction implements Function {
 
         positionalDifference = y0 - otherPosition1D;
 
-        acceleration = -G * M2 * (Math.pow(distance, 3)*positionalDifference);
+        acceleration = -G * M2 * (Math.pow(distance, 3d)*positionalDifference);
 
         return acceleration;
     }
 
-    public double accelerationForEuler(){
-        return planetObject.getAcceleration()[i] + acceleration;
+    //this one simply updates the acceleration on the ModelRunner by adding it to the old acceleration
+    public double accelerationForEuler(int i){
+        double newAcceleration = planetObject.getAcceleration()[i] + acceleration;
+        return  newAcceleration;
     }
 
 

@@ -14,10 +14,11 @@ public class Solvers {
     public Solvers() {
     }
 
+    //Since the eulerStep() method doesn't return anything, I made an  instance field w which is the result of the euler calculation and
+    //then I can use it to call the new values of position and velocity calculated by euler from the ModelRunner
     public double getW(int i){
         return w[i];
     }
-
 
     /**
      * Approximates the acceleration between two PlanetObject objects using the formula for acceleration between two celestial bodies
@@ -92,14 +93,18 @@ public class Solvers {
         planetObject.setCoordinates(positionalVector);
     }
 
+    //This is the Euler solver. I pass in two Functions into it using Vector y. y basically calls the two functions that i've added to it
+    //y0 are the initial values for each equation, the one in the 0th index corresponds to the first equation, the in the 1st index to the second equation
+    //h is just the step size and t is the time but we don't have to worry about it in this situation
     public void eulerStep(Vector y, double[] y0, double h, double t){
-        int vectorLength = y.getLength();
-        w = y0;
+        int vectorLength = y.getLength(); //this just gets the number of functions to loop through them in the for loo[
+        w = y0; //this gets the initial values
         for (int i = 0; i < vectorLength; i++){
-            w[i] += h*(y.getFunction(i, y0[i], t));
-            System.out.println("Function "+i+": "+w[i]);
+            w[i] += h*(y.getFunction(i, y0[i], t)); //this actually the Euler step
+            //System.out.println("Function "+i+": "+w[i]);
         }
     }
+
 
     public void rungeKuttaStep(Vector y, double[] y0, double h, double t){
         int vectorLength = y.getLength();
